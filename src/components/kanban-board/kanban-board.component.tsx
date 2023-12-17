@@ -51,7 +51,7 @@ const KanbanBoard = () => {
       }
       return data;
     });
-    console.log(newKanbanData);
+
     setKanbanData(newKanbanData);
   };
 

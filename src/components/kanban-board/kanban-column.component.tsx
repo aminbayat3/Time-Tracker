@@ -28,7 +28,7 @@ const KanbanColumn: FC<KanbanColumnProps> = ({ column, tasks }) => {
           {(provided) => (
             <Box ref={provided.innerRef} {...provided.droppableProps}>
               {tasks.map((task, idx) => (
-                <KanbanTask key={idx} task={task} index={idx} />
+                <KanbanTask key={task.id} task={task} index={idx} />
               ))}
               {provided.placeholder}
             </Box>

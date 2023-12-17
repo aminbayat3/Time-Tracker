@@ -10,7 +10,6 @@ export type KanbanTaskProps = {
 };
 
 const KanbanTask: FC<KanbanTaskProps> = ({ task, index }) => {
-  console.log('task', task)
   return (
     <Draggable index={index} draggableId={task.id}>
       {(provided) => (
