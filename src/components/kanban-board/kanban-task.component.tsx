@@ -1,7 +1,7 @@
 import { FC } from "react";
-import Paper from "@mui/material/Paper";
 import { Draggable } from "react-beautiful-dnd";
 
+import { TaskPaper } from "./kanban.styles";
 import { TasksData } from "./kanban-data";
 
 export type KanbanTaskProps = {
@@ -11,16 +11,16 @@ export type KanbanTaskProps = {
 
 const KanbanTask: FC<KanbanTaskProps> = ({ task, index }) => {
   return (
-    <Draggable index={index} draggableId={task.id}>
-      {(provided) => (
-        <Paper
-          sx={{ p: "15px", m: "25px auto" }}
+    <Draggable index={index} draggableId={`${task.id}`}>
+      {(provided, snapshot) => (
+        <TaskPaper
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          isDragging={snapshot.isDragging}
         >
           {task.content}
-        </Paper>
+        </TaskPaper>
       )}
     </Draggable>
   );

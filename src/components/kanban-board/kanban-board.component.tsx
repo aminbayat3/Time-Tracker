@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { v4 as uuidv4 } from 'uuid';
 
 import KanbanColumn from "./kanban-column.component";
 
@@ -12,6 +13,7 @@ const KanbanBoard = () => {
     useState<KanbanData[]>(KANBAN_INITIAL_STATE);
 
   useEffect(() => {
+    console.log('hit')
     const newKanbanData = KANBAN_DATA.columnOrder.map((columnId) => {
       const column = KANBAN_DATA.columns[columnId];
       const tasks = column.taskIds.map((taskId) => KANBAN_DATA.tasks[taskId]);
@@ -58,10 +60,10 @@ const KanbanBoard = () => {
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Grid container sx={{ width: "85%", margin: "0 auto" }}>
-        {kanbanData.map(({ column, tasks }, idx) => {
+        {kanbanData[0].tasks.length && kanbanData.map(({ column, tasks }) => {
           return (
             <KanbanColumn
-              key={`${column.id}-${idx}`}
+              key={uuidv4()}
               column={column}
               tasks={tasks}
             />

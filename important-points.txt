@@ -1,0 +1,66 @@
+Custom http request using axios 
+
+import { useEffect, useState, useCallback, useRef } from 'react';
+import axios from 'axios';
+
+const useAxios = () => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const activeHttpRequests = useRef([]);
+  const axiosInstance = axios.create();
+
+  const fetchData = useCallback(async (url, method = 'get', requestData = null, headers = {}) => {
+    const source = axios.CancelToken.source();
+    activeHttpRequests.current.push(source);
+
+    try {
+      setLoading(true);
+      const config = {
+        method,
+        url,
+        headers, // Include custom headers
+        cancelToken: source.token,
+      };
+
+      if (method.toLowerCase() !== 'get') {
+        config.data = requestData;
+      }
+
+      const response = await axiosInstance(config);
+      setData(response.data);
+
+      // Filter out completed requests after a response is received
+      activeHttpRequests.current = activeHttpRequests.current.filter(reqCtrl => reqCtrl.token.reason === undefined);
+    } catch (err) {
+      if (axios.isCancel(err)) {
+        // Request was canceled
+        console.log('Request canceled:', err.message);
+      } else {
+        // Request failed for some other reason
+        setError(err);
+        throw new Error(`Request failed: ${err.message}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup function to cancel all active requests when the component unmounts
+      activeHttpRequests.current.forEach(source => source.cancel('Request canceled due to component unmount'));
+    };
+  }, []);
+
+  return { data, error, loading, fetchData };
+};
+
+export default useAxios;
+
+regarding available vehicles for each reservation, we dont need to save the available vehicles in the global state, we need to save it
+only in local state, so with that in mind, we don't need to handle the request with redux saga, instead we can handle the request using this
+custom http hook and save the response in the local state.
+
+*****************************************************************************************************************************************
