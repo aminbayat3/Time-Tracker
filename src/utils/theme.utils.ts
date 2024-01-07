@@ -1,4 +1,4 @@
-import { amber, grey, deepOrange } from "@mui/material/colors";
+import { amber, grey, deepOrange, cyan, blueGrey } from "@mui/material/colors";
 import { THEME_NAMES } from "../types/theme.type";
 
 export const getDesignTokens = (mode: THEME_NAMES) => {
@@ -15,22 +15,26 @@ export const getDesignTokens = (mode: THEME_NAMES) => {
             primary: grey[900],
             secondary: grey[800],
           },
+          secondary: cyan
         }
       }
     case THEME_NAMES.DARK:
       return {
+        palette: {
           mode,
           // palette values for dark mode
-          primary: deepOrange,
+          primary: cyan,
           divider: deepOrange[700],
           background: {
-            default: deepOrange[900],
-            paper: deepOrange[900],
+            default: cyan[900],
+            paper: blueGrey[900],
           },
           text: {
             primary: '#fff',
             secondary: grey[500],
           },
+          secondary: blueGrey
+        }
       }
 
     default:

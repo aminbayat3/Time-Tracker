@@ -30,8 +30,18 @@ export const KANBAN_DATA: Kanban = {
       title: "Todo",
       taskIds: ["task-1", "task-2", "task-3", "task-4"],
     },
+    "column-2": {
+      id: 'column-2',
+      title: 'In-porgress',
+      taskIds: [],
+    },
+    'column-3': {
+      id: 'column-3',
+      title: 'Done',
+      taskIds: [],
+    }
   },
-  columnOrder: ["column-1"],
+  columnOrder: ["column-1", "column-2", "column-3"],
 };
 
 export type KanbanData = {
@@ -39,8 +49,8 @@ export type KanbanData = {
     tasks: TasksData[],
 }
 
-export const KANBAN_INITIAL_STATE: KanbanData[] = [{
-  column: {} as ColumnData,
-  tasks: [],
-}];
+// export const KANBAN_INITIAL_STATE: KanbanData[] = [{
+//   column: {} as ColumnData,
+//   tasks: [],
+// }];
 
