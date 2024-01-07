@@ -1,73 +1,36 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { Kanban } from "./kanban-data";
+import { getNewKanbanData } from "./kanban.utils";
 
 import KanbanColumn from "./kanban-column.component";
 
-import { KANBAN_DATA, KANBAN_INITIAL_STATE, KanbanData } from "./kanban-data";
-import { selectKanbanMap } from "./kanban.utils";
+import { KANBAN_DATA } from "./kanban-data";
 
 const KanbanBoard = () => {
-  const [kanbanData, setKanbanData] =
-    useState<KanbanData[]>(KANBAN_INITIAL_STATE);
+  const [kanbanData, setKanbanData] = useState<Kanban>(KANBAN_DATA);
 
   useEffect(() => {
-    console.log('hit')
-    const newKanbanData = KANBAN_DATA.columnOrder.map((columnId) => {
-      const column = KANBAN_DATA.columns[columnId];
-      const tasks = column.taskIds.map((taskId) => KANBAN_DATA.tasks[taskId]);
-      return { column, tasks };
-    });
-
-    setKanbanData(newKanbanData);
+    setKanbanData({ ...KANBAN_DATA });
   }, []);
 
   const handleDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
-    if (!destination) {
-      return;
-    }
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
+    const newKanbanData = getNewKanbanData(kanbanData, result);
 
-    const mappedKanbanData = selectKanbanMap(kanbanData);
-    const column = mappedKanbanData.columns[source.droppableId];
-    const newTaskIds = [...column.taskIds];
-    newTaskIds.splice(source.index, 1);
-    newTaskIds.splice(destination.index, 0, draggableId);
-    const newColumn = {
-      ...column,
-      taskIds: newTaskIds,
-    };
-    const newTasks = newColumn.taskIds.map(
-      (taskId) => mappedKanbanData.tasks[taskId]
-    );
-    const newKanbanData = kanbanData.map((data) => {
-      if (data.column.id === newColumn.id) {
-        return { column: newColumn, tasks: newTasks };
-      }
-      return data;
-    });
-
-    setKanbanData(newKanbanData);
+    newKanbanData && setKanbanData(newKanbanData);
   };
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <Grid container sx={{ width: "85%", margin: "0 auto" }}>
-        {kanbanData[0].tasks.length && kanbanData.map(({ column, tasks }) => {
-          return (
-            <KanbanColumn
-              key={uuidv4()}
-              column={column}
-              tasks={tasks}
-            />
+      <Grid container spacing={2} sx={{ width: "85%", margin: "70px auto" }}>
+        {kanbanData.columnOrder.map((columnId) => {
+          const column = kanbanData.columns[columnId];
+          const tasks = column.taskIds.map(
+            (taskId) => kanbanData.tasks[taskId]
           );
+          return <KanbanColumn key={uuidv4()} column={column} tasks={tasks} />;
         })}
       </Grid>
     </DragDropContext>

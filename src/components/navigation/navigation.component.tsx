@@ -50,6 +50,7 @@ const Navigation: React.FC = () => {
     );
   };
 
+  // this later can be handled with a custom hook
   const handleDrawerOpen = () => {
     setOpen(true);
   };
